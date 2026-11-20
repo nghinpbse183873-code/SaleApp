@@ -1,0 +1,242 @@
+<Window x:Class="SaleApp.Views.Staff.StaffShell"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:SaleApp.ViewModels.Staff"
+        xmlns:views="clr-namespace:SaleApp.Views.Staff"
+        Title="SaleApp – Staff Portal"
+        Width="1280" Height="800"
+        MinWidth="1024" MinHeight="768"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent">
+
+    <Window.DataContext>
+        <vm:StaffShellViewModel/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
+            <views:DashboardView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ProductManagementViewModel}">
+            <views:ProductManagementView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:CategoryManagementViewModel}">
+            <views:CategoryManagementView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:OrderManagementViewModel}">
+            <views:OrderManagementView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:CustomerHistoryViewModel}">
+            <views:CustomerHistoryView/>
+        </DataTemplate>
+
+        <!-- Active nav item style trigger helper -->
+        <Style x:Key="NavItem" TargetType="Button" BasedOn="{StaticResource NavButton}"/>
+    </Window.Resources>
+
+    <Border CornerRadius="12" Background="{StaticResource BackgroundBrush}"
+            BorderBrush="{StaticResource Surface2Brush}" BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect Color="Black" BlurRadius="30" ShadowDepth="0" Opacity="0.5"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="220"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- ===== SIDEBAR ===== -->
+            <Border Grid.Column="0" Background="{StaticResource SidebarBrush}"
+                    CornerRadius="12,0,0,12"
+                    BorderBrush="{StaticResource Surface2Brush}"
+                    BorderThickness="0,0,1,0">
+                <DockPanel>
+                    <!-- Brand + Drag -->
+                    <Border DockPanel.Dock="Top" Height="64" Padding="20,0"
+                            MouseLeftButtonDown="DragBar_MouseDown">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Border Width="36" Height="36" CornerRadius="10" Margin="0,0,12,0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#FF6B35" Offset="0"/>
+                                        <GradientStop Color="#F59E0B" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <TextBlock Text="🍔" FontSize="18" HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="SaleApp" FontSize="16" FontWeight="Bold"
+                                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                                <TextBlock Text="Staff Portal" FontSize="10"
+                                           Foreground="{StaticResource TextMutedBrush}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Staff chip -->
+                    <Border DockPanel.Dock="Top" Margin="12,0,12,8" Padding="12,10"
+                            Background="{StaticResource Surface2Brush}" CornerRadius="10">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="34" Height="34" CornerRadius="17"
+                                    Background="{StaticResource PrimaryBrush}" Margin="0,0,10,0">
+                                <TextBlock Text="👤" FontSize="16"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{Binding StaffName}" FontWeight="SemiBold"
+                                           Foreground="{StaticResource TextPrimaryBrush}" FontSize="13"/>
+                                <TextBlock Text="Nhân viên" FontSize="11"
+                                           Foreground="{StaticResource TextMutedBrush}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Separator DockPanel.Dock="Top" Margin="16,4"/>
+
+                    <!-- NAV BUTTONS -->
+                    <StackPanel DockPanel.Dock="Top">
+                        <Button x:Name="BtnDashboard" Command="{Binding ShowDashboardCommand}" Tag="Dashboard">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource NavButton}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ActiveMenu}" Value="Dashboard">
+                                            <Setter Property="Background" Value="#1AFF6B35"/>
+                                            <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+                                            <Setter Property="FontWeight" Value="SemiBold"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="📊" FontSize="15" Width="24" VerticalAlignment="Center"/>
+                                <TextBlock Text="Dashboard" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Command="{Binding ShowProductsCommand}">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource NavButton}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ActiveMenu}" Value="Products">
+                                            <Setter Property="Background" Value="#1AFF6B35"/>
+                                            <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+                                            <Setter Property="FontWeight" Value="SemiBold"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🛍️" FontSize="15" Width="24" VerticalAlignment="Center"/>
+                                <TextBlock Text="Sản phẩm" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Command="{Binding ShowCategoriesCommand}">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource NavButton}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ActiveMenu}" Value="Categories">
+                                            <Setter Property="Background" Value="#1AFF6B35"/>
+                                            <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+                                            <Setter Property="FontWeight" Value="SemiBold"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🗂️" FontSize="15" Width="24" VerticalAlignment="Center"/>
+                                <TextBlock Text="Danh mục" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Command="{Binding ShowOrdersCommand}">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource NavButton}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ActiveMenu}" Value="Orders">
+                                            <Setter Property="Background" Value="#1AFF6B35"/>
+                                            <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+                                            <Setter Property="FontWeight" Value="SemiBold"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🧾" FontSize="15" Width="24" VerticalAlignment="Center"/>
+                                <TextBlock Text="Đơn hàng" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Command="{Binding ShowHistoryCommand}">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource NavButton}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ActiveMenu}" Value="History">
+                                            <Setter Property="Background" Value="#1AFF6B35"/>
+                                            <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+                                            <Setter Property="FontWeight" Value="SemiBold"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="📋" FontSize="15" Width="24" VerticalAlignment="Center"/>
+                                <TextBlock Text="Lịch sử mua hàng" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                    <!-- Logout at bottom -->
+                    <StackPanel DockPanel.Dock="Bottom" Margin="0,0,0,16">
+                        <Separator Margin="16,8"/>
+                        <Button Command="{Binding LogoutCommand}" Foreground="{StaticResource DangerBrush}">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource NavButton}">
+                                    <Setter Property="Foreground" Value="{StaticResource DangerBrush}"/>
+                                </Style>
+                            </Button.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🚪" FontSize="15" Width="24" VerticalAlignment="Center"/>
+                                <TextBlock Text="Đăng xuất" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- ===== MAIN CONTENT ===== -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="48"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Top bar -->
+                <Border Grid.Row="0" Background="{StaticResource SurfaceBrush}"
+                        BorderBrush="{StaticResource Surface2Brush}" BorderThickness="0,0,0,1"
+                        MouseLeftButtonDown="DragBar_MouseDown">
+                    <DockPanel Margin="20,0">
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button Content="—" Style="{StaticResource IconButton}"
+                                    Foreground="{StaticResource TextMutedBrush}"
+                                    Click="MinimizeButton_Click" Margin="0,0,6,0"/>
+                            <Button Content="✕" Style="{StaticResource IconButton}"
+                                    Foreground="{StaticResource TextMutedBrush}"
+                                    Click="CloseButton_Click"/>
+                        </StackPanel>
+                        <TextBlock Text="{Binding ActiveMenu}" VerticalAlignment="Center"
+                                   Foreground="{StaticResource TextSecondaryBrush}" FontSize="13"/>
+                    </DockPanel>
+                </Border>
+
+                <!-- Content -->
+                <ContentPresenter Grid.Row="1" Content="{Binding CurrentViewModel}"/>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

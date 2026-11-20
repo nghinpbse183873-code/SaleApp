@@ -1,0 +1,111 @@
+<UserControl x:Class="SaleApp.Views.Staff.CustomerHistoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <StackPanel>
+                <TextBlock Text="Lịch sử mua hàng" Style="{StaticResource PageTitle}"/>
+                <TextBlock Text="Xem và tra cứu lịch sử giao dịch của từng khách hàng"
+                           Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" Margin="0,4,0,0"/>
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button Content="🔄  Làm mới" Style="{StaticResource SecondaryButton}"
+                        Command="{Binding RefreshCommand}" Height="36" Margin="0,0,8,0"/>
+                <Button Content="✕  Xoá bộ lọc" Style="{StaticResource SecondaryButton}"
+                        Command="{Binding ClearFilterCommand}" Height="36"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Filters -->
+        <Border Grid.Row="1" Style="{StaticResource Card}" Margin="0,0,0,16">
+            <Grid>
+                <!-- Customer filter -->
+                <ComboBox Style="{StaticResource ModernComboBox}" Height="40"
+                          ItemsSource="{Binding Customers}"
+                          SelectedItem="{Binding SelectedCustomer}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <Run Text="{Binding DisplayName, Mode=OneWay}"/>
+                                <Run Text=" (" Foreground="{StaticResource TextMutedBrush}"/>
+                                <Run Text="{Binding Username, Mode=OneWay}" Foreground="{StaticResource TextMutedBrush}"/>
+                                <Run Text=")" Foreground="{StaticResource TextMutedBrush}"/>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </Grid>
+        </Border>
+
+        <!-- History DataGrid -->
+        <Border Grid.Row="2" Style="{StaticResource Card}">
+            <DataGrid Style="{StaticResource ModernDataGrid}"
+                      ItemsSource="{Binding History}"
+                      SelectedItem="{Binding SelectedHistory}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Mã đơn"      Binding="{Binding OrderCode}"      Width="130"/>
+                    <DataGridTextColumn Header="Khách hàng"  Binding="{Binding DisplayName}"    Width="150"/>
+                    <DataGridTextColumn Header="SĐT"         Binding="{Binding CustomerPhone}"  Width="110"/>
+                    <DataGridTextColumn Header="Ngày mua"    Binding="{Binding OrderedAt, StringFormat=dd/MM/yyyy HH:mm}" Width="130"/>
+                    <DataGridTextColumn Header="Số mặt hàng" Binding="{Binding TotalItems}"     Width="90"/>
+                    <DataGridTextColumn Header="Tổng tiền"   Binding="{Binding TotalDisplay}"   Width="110"/>
+                    <DataGridTemplateColumn Header="TT Đơn" Width="120">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding OrderStatusText}" Margin="12,0"
+                                           FontSize="12" FontWeight="SemiBold"
+                                           Foreground="{Binding OrderStatus, Converter={StaticResource OrderStatusColor}}"
+                                           VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="TT Thanh toán" Width="120">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding PaymentStatusText}" Margin="12,0"
+                                           FontSize="12" FontWeight="SemiBold"
+                                           Foreground="{Binding PaymentStatus, Converter={StaticResource PaymentStatusColor}}"
+                                           VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Chi tiết" Width="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="👁  Xem" Style="{StaticResource IconButton}" Margin="8,0"
+                                        Command="{Binding DataContext.ViewDetailCommand,
+                                            RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        Foreground="{StaticResource PrimaryBrush}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <!-- Summary bar -->
+        <Border Grid.Row="3" Style="{StaticResource Card}" Margin="0,12,0,0">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Foreground="{StaticResource TextSecondaryBrush}" FontSize="13"
+                           VerticalAlignment="Center">
+                    <Run Text="Tổng:"/>
+                    <Run Text="{Binding TotalRecords, Mode=OneWay}" FontWeight="Bold"
+                         Foreground="{StaticResource TextPrimaryBrush}"/>
+                    <Run Text=" đơn  |  Doanh thu đã thanh toán:"/>
+                    <Run Text="{Binding TotalAmountDisplay, Mode=OneWay}" FontWeight="Bold"
+                         Foreground="{StaticResource SecondaryBrush}"/>
+                </TextBlock>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
